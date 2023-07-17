@@ -1,0 +1,17 @@
+SELECT order_id, ship_country
+FROM orders
+WHERE ship_country LIKE 'U%';
+
+SELECT order_id, ship_country, freight
+FROM orders
+WHERE ship_country LIKE 'N%'
+ORDER BY freight DESC
+LIMIT 10;
+
+SELECT last_name, first_name, home_phone, region
+FROM employees
+WHERE region IS NULL;
+
+SELECT COUNT(*)
+FROM customers
+WHERE region IS NOT NULL;
