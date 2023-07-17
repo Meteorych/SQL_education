@@ -15,3 +15,21 @@ WHERE region IS NULL;
 SELECT COUNT(*)
 FROM customers
 WHERE region IS NOT NULL;
+
+SELECT country
+FROM suppliers
+INTERSECT
+SELECT country
+FROM customers
+INTERSECT
+SELECT country
+FROM employees;
+
+SELECT country
+FROM suppliers
+INTERSECT
+SELECT country
+FROM customers
+EXCEPT
+SELECT country
+FROM employees
