@@ -1,0 +1,27 @@
+SELECT c.company_name as customer,
+	CONCAT(e.first_name, ' ' , e.last_name) AS employee
+FROM ORDERS AS o
+JOIN customers AS c USING (customer_id)
+JOIN employees AS e USING (employee_id)
+JOIN shippers as s ON o.ship_via = s.shipper_id
+WHERE c.city = 'London'
+AND e.city = 'London'
+AND s.company_name = 'Speedy Express';
+	
+SELECT p.product_name, p.units_in_stock, s.contact_name, s.phone 
+FROM products AS p
+JOIN suppliers AS s USING (supplier_id) 
+WHERE discontinued != 1 AND units_in_stock < 20
+ORDER BY units_in_stock;
+
+SELECT distinct contact_name, order_id
+FROM customers
+LEFT JOIN orders USING(customer_id)
+WHERE order_id IS NULL
+ORDER BY contact_name;
+
+SELECT contact_name, order_id
+FROM orders
+RIGHT JOIN customers USING(customer_id)
+WHERE order_id IS NULL
+ORDER BY contact_name;
