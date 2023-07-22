@@ -1,0 +1,36 @@
+SELECT company_name, contact_name
+FROM customers
+WHERE EXISTS (SELECT customer_id FROM orders
+			  WHERE customer_id = customers.customer_id
+			  AND freight BETWEEN 50 AND 100);
+			  
+SELECT company_name, contact_name
+FROM customers
+WHERE EXISTS (SELECT customer_id FROM orders
+			  WHERE customer_id = customers.customer_id
+			  AND order_date BETWEEN '1995-02-01' AND '1997-02-01');
+			  
+			  
+SELECT AVG (quantity)
+FROM order_details;
+
+SELECT DISTINCT product_name, quantity
+FROM products
+JOIN order_details USING (product_id)
+WHERE quantity > (
+		SELECT AVG(quantity)
+		FROM order_details
+)
+ORDER BY quantity;
+
+SELECT product_name, units_in_stock
+FROM products
+WHERE units_in_stock < ALL (SELECT AVG(quantity)
+						    FROM order_details
+							GROUP BY product_id)
+ORDER BY units_in_stock DESC;
+
+SELECT DISTINCT product_name, quantity
+FROM products
+JOIN order_details USING(product_id)
+WHERE quantity = 10;
