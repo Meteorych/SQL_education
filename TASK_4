@@ -1,0 +1,61 @@
+CREATE TABLE IF NOT EXISTS exam
+(
+	exam_id serial UNIQUE NOT NULL,
+	exam_name varchar(32),
+	exam_date date,
+	
+	CONSTRAINT pk_exam_exam_id PRIMARY KEY (exam_id)
+);
+
+DROP TABLE person;
+CREATE TABLE IF NOT EXISTS person
+(
+	exam_id int PRIMARY KEY,
+	exam_name varchar(32),
+	exam_surname varchar(64),
+	exam_freight decimal CHECK (exam_freight > 0 AND exam_freight < 100)
+);
+SELECT * FROM person;
+
+INSERT INTO person
+VALUES
+(1, 'Hog', 'Bibs', 120);
+
+CREATE TABLE student
+(
+	student_id serial,
+	full_name varchar,		
+	grade int DEFAULT 1
+);
+
+INSERT INTO student
+VALUES
+(1, 'vasia');
+
+SELECT *
+FROM student;
+
+ALTER TABLE student
+ALTER COLUMN DROP DEFAULT;
+
+ALTER TABLE products
+ADD CONSTRAINT CHK_products_price CHECK(unit_price > 0);
+
+SELECT MAX(product_id) FROM products;
+
+CREATE SEQUENCE IF NOT EXISTS products_product_id_seq
+START WITH 78 OWNED BY products.product_id;
+
+
+ALTER TABLE products
+ALTER COLUMN product_id SET DEFAULT nextval('products_product_id_seq')
+
+INSERT INTO products(product_name, supplier_id, category_id, quantity_per_unit, 
+					 unit_price, units_in_stock, units_on_order, reorder_level, discontinued)
+VALUES
+('prod', 1, 1, 10, 20, 20, 10, 1, 0)
+RETURNING product_id;
+
+
+
+
