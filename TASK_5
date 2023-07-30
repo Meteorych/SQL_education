@@ -1,0 +1,36 @@
+DROP VIEW IF EXISTS products_suppliers_categories;
+
+CREATE VIEW products_suppliers_categories AS
+SELECT product_name, quantity_per_unit, unit_price, units_in_stock,
+company_name, contact_name, phone, 
+category_name, description
+FROM products
+JOIN suppliers USING(supplier_id)
+JOIN categories USING(category_id);
+
+SELECT *
+FROM products_suppliers_categories;
+
+CREATE OR REPLACE VIEW heavy_orders AS
+SELECT *
+FROM orders
+WHERE freight > 100
+WITH LOCAL CHECK OPTION;
+
+SELECT * 
+FROM heavy_orders 
+ORDER BY freight;
+
+-- homework
+--task 1
+CREATE OR REPLACE VIEW my_view_orders AS
+SELECT order_date, required_date, shipped_date, ship_postal_code, company_name, contact_name, phone, last_name, first_name, title
+FROM orders
+JOIN customers USING (customer_id)
+JOIN employees USING (employee_id);
+
+SELECT * 
+FROM my_view_orders
+WHERE order_date < '1997-1-1';
+
+DROP VIEW my_view_orders;
