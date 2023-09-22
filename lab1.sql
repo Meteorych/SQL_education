@@ -1,6 +1,18 @@
+--first exercise
+select student_group.id
+from teacher_teaches_subjects_in_groups
+join teacher on teacher_teaches_subjects_in_groups.personalid = teacher.id
+join student_group on teacher_teaches_subjects_in_groups.id = student_group.id
+where teacher.speciality like student_group.speciality
+group by student_group.id
+-----------------------------------------------------------------
+---second exercise
+SELECT *
+FROM spj
 --15
-SELECT COUNT(*) FROM spj
-WHERE p_id = 'П1';
+SELECT COUNT(DISTINCT j_id) AS Number_Project
+FROM spj
+WHERE p_id = 'П2';
 --28
 SELECT DISTINCT s.j_id
 FROM SPJ s
@@ -14,24 +26,15 @@ WHERE s.j_id NOT IN (
     WHERE d1.color = 'Красный' AND p1.city = 'Москва'
 );
 --36
-SELECT DISTINCT p1.id AS Пx, p2.id AS Пy
-FROM POSTAVSHIKI p1
-JOIN POSTAVSHIKI p2 ON p1.id < p2.id -- Избегаем дубликатов и избегаем соединения с самим собой
-WHERE NOT EXISTS (
-    SELECT s1.j_id
-    FROM SPJ s1
-    LEFT JOIN SPJ s2 ON s1.j_id = s2.j_id AND s2.p_id = p2.id
-    WHERE s1.p_id = p1.id
-    GROUP BY s1.j_id
-    HAVING COUNT(DISTINCT s1.s) != COUNT(DISTINCT s2.s)
-) AND NOT EXISTS (
-    SELECT s2.j_id
-    FROM SPJ s2
-    LEFT JOIN SPJ s1 ON s2.j_id = s1.j_id AND s1.p_id = p1.id
-    WHERE s2.p_id = p2.id
-    GROUP BY s2.j_id
-    HAVING COUNT(DISTINCT s2.s) != COUNT(DISTINCT s1.s)
-);
+WITH DetailSets AS (
+    SELECT p_id, j_id, STRING_AGG(d_id, ',') AS detail_set
+    FROM SPJ
+    GROUP BY p_id, j_id
+)
+SELECT DISTINCT s1.p_id AS Пx, s2.p_id AS Пy
+FROM DetailSets s1
+JOIN DetailSets s2 ON s1.p_id < s2.p_id
+   AND s1.detail_set = s2.detail_set;
 
 --2
 SELECT 
@@ -52,7 +55,7 @@ FROM spj s
 JOIN POSTAVSHIKI pst ON s.p_id = pst.id
 JOIN PROJECTS pr ON s.j_id = pr.id
 JOIN DETAILS d ON s.d_id = d.id
-WHERE (d.city = pst.city AND d.city = pr.city)
+WHERE (d.city = pst.city AND d.city = pr.city AND pst.city = pr.city)
 --18
 SELECT DISTINCT s.d_id AS Номер_Детали
 FROM SPJ s
@@ -66,7 +69,7 @@ JOIN (
 SELECT DISTINCT s.j_id AS Номер_Проекта
 FROM SPJ s
 WHERE s.d_id IN (
-    SELECT d_id
+    SELECT DISTINCT d_id
     FROM SPJ
     WHERE p_id = 'П1'
 );
